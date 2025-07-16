@@ -39,7 +39,7 @@ import HugeLogo from './assets/company_logo/HugeLogo.avif';
 
 // Education Section Logo's
 import AmritaLogo from './assets/education_logo/AmritaLogo.jpg';
-import PsbbLogo from './assets/education_logo/Psbblogo.png';
+import PsbbLogo from './assets/education_logo/PsbbLogo.png';
 
 // Project Section Logo's
 import githubdetLogo from './assets/work_logo/github_det.png';
