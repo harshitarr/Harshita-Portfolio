@@ -13,7 +13,6 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -120,9 +119,9 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-16 left-1/2 transform -translate-x-1/2 w-4/5 bg-[#050414] bg-opacity-50 backdrop-filter backdrop-blur-lg z-50 rounded-lg shadow-lg md:hidden"
+            className="absolute top-16 left-0 w-full bg-[#050414] bg-opacity-70 backdrop-blur-lg z-50 md:hidden flex justify-center"
           >
-            <ul className="flex flex-col items-center space-y-4 py-4 text-gray-300">
+            <ul className="flex flex-col items-center space-y-6 py-6 text-gray-300">
               {menuItems.map((item) => (
                 <li
                   key={item.id}
@@ -135,14 +134,14 @@ const Navbar = () => {
                   </button>
                 </li>
               ))}
-              <div className="flex space-x-4">
+              <div className="flex space-x-6">
                 <a
                   href="https://github.com/harshitarr"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-[#ff5f8f]"
                 >
-                  <FaGithub size={24} />
+                  <FaGithub size={28} />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/harshita-ravindran-revathi-49aaa62b4"
@@ -150,7 +149,7 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-[#ff5f8f]"
                 >
-                  <FaLinkedin size={24} />
+                  <FaLinkedin size={28} />
                 </a>
               </div>
             </ul>
