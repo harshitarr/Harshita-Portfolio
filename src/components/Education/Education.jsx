@@ -1,4 +1,6 @@
+// src/components/Education/Education.jsx
 import React from "react";
+import { motion } from "framer-motion";
 import { education } from "../../constants";
 
 const Education = () => {
@@ -8,29 +10,49 @@ const Education = () => {
       className="py-24 px-[5vw] md:px-[7vw] lg:px-[16vw] font-sans bg-skills-gradient clip-path-custom-3"
     >
       {/* Section Title */}
-      <div className="text-center mb-16">
+      <motion.div
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
         <h2 className="text-4xl font-bold text-white">EDUCATION</h2>
-        <div className="w-32 h-1 bg-purple-500 mx-auto mt-4"></div>
+        <div className="w-32 h-1 bg-[#ff4f8b] mx-auto mt-4 rounded-full shadow-[0_0_12px_#ff4f8b]"></div>
         <p className="text-gray-400 mt-4 text-lg font-semibold">
           My education has been a journey of learning and development. Here are
           the details of my academic background.
         </p>
-      </div>
+      </motion.div>
 
       {/* Timeline Container */}
       <div className="relative pl-20 lg:pl-0">
-        {/* Vertical Line */}
-        <div className="absolute left-6 lg:left-1/2 transform lg:-translate-x-1/2 w-1 bg-white h-full"></div>
+        {/* Vertical Line with animation */}
+        <motion.div
+          className="absolute left-6 lg:left-1/2 transform lg:-translate-x-1/2 w-1 bg-[#ff4f8b] origin-top shadow-[0_0_12px_#ff4f8b]"
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          style={{ height: "100%" }}
+        ></motion.div>
 
         {education.map((edu, index) => (
-          <div
+          <motion.div
             key={edu.id}
             className={`mb-20 flex flex-col lg:flex-row items-start lg:items-center ${
               index % 2 === 0 ? "lg:justify-start" : "lg:justify-end"
             }`}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              ease: "easeOut",
+              delay: index * 0.15,
+            }}
+            viewport={{ once: true }}
           >
             {/* Timeline Circle */}
-            <div className="absolute left-3 lg:left-1/2 transform lg:-translate-x-1/2 w-10 h-10 lg:w-16 lg:h-16 bg-white border-4 border-[#8245ec] rounded-full flex justify-center items-center z-10">
+            <div className="absolute left-3 lg:left-1/2 transform lg:-translate-x-1/2 w-10 h-10 lg:w-16 lg:h-16 bg-gray-900 border-4 border-[#ff4f8b] rounded-full flex justify-center items-center z-10 shadow-[0_0_20px_#ff4f8b]">
               <img
                 src={edu.img}
                 alt={edu.school}
@@ -39,12 +61,13 @@ const Education = () => {
             </div>
 
             {/* Card */}
-            <div
-              className={`w-full lg:w-[45%] p-6 lg:p-8 rounded-2xl bg-gray-900 border border-white shadow-[0_0_20px_1px_rgba(130,69,236,0.3)] backdrop-blur-md transform transition-transform duration-300 hover:scale-105 ${
+            <motion.div
+              className={`w-full lg:w-[45%] p-6 lg:p-8 rounded-2xl bg-gray-900 border border-[#ff4f8b] shadow-[0_0_20px_1px_rgba(255,79,139,0.4)] backdrop-blur-md transition duration-300 hover:shadow-[0_0_25px_2px_rgba(255,79,139,0.6)] ${
                 index % 2 === 0
                   ? "lg:ml-[55%] lg:mr-0 text-left"
                   : "lg:mr-[55%] lg:ml-0 text-left"
               }`}
+              whileHover={{ scale: 1.05 }}
             >
               {/* Card Content */}
               <div className="flex items-center space-x-4 mb-4">
@@ -67,8 +90,8 @@ const Education = () => {
                 Grade: {edu.grade}
               </p>
               <p className="text-gray-400">{edu.desc}</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
     </section>

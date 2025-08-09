@@ -3,9 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const BlurBlob = ({ position, size }) => {
-  // Destructure position and size with default values
-  const { top, left } = position
-  const { width, height } = size 
+  const { top, left } = position;
+  const { width, height } = size;
 
   return (
     <div
@@ -19,13 +18,12 @@ const BlurBlob = ({ position, size }) => {
       }}
     >
       <div
-        className="w-full h-full bg-purple-500 rounded-full opacity-20 blur-3xl animate-blob"
+        className="w-full h-full bg-pink-800 rounded-full opacity-30 blur-3xl animate-blob"
       ></div>
     </div>
   );
 };
 
-// Define prop types
 BlurBlob.propTypes = {
   position: PropTypes.shape({
     top: PropTypes.string,

@@ -198,6 +198,7 @@ export const SkillsInfo = [
       github: "https://github.com/codingmastr/Task-Reminder-Tool",
       webapp: "chrome://extensions/?id=kngheeibjnnidhfoomkpnbeghackheci",
     },
+<<<<<<< HEAD
     {
       id: 5,
       title: "Webverse Digital",
@@ -239,3 +240,7 @@ export const SkillsInfo = [
       webapp: "https://removeyourbg.netlify.app/",
     },
   ];  
+=======
+
+  ];  
+>>>>>>> d4e11b0 (updated)
