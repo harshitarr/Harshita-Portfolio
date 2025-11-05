@@ -11,7 +11,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="relative py-20 px-[7vw] md:px-[7vw] lg:px-[15vw] font-sans overflow-hidden min-h-screen flex items-center bg-gray-900"
+      className="relative py-20 px-[7vw] md:px-[7vw] lg:px-[15vw] font-sans overflow-hidden min-h-screen flex items-center"
     >
       {/* Abstract Background Element (The glowing blob/gradient) 
           Note: 'animate-blob' and 'animate-pulse-slow' require custom Tailwind keyframes to be defined globally.

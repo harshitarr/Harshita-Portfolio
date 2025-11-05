@@ -61,7 +61,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="bg-[#0a0718] text-white py-20 px-4 md:px-12"
+      className=" text-white py-20 px-4 md:px-12"
     >
       {/* Section Heading */}
       <motion.div

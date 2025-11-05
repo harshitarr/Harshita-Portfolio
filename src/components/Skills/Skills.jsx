@@ -1,8 +1,8 @@
 // src/components/Skills/Skills.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SkillsInfo } from "../../constants";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCodeBranch, FaLaptopCode, FaDatabase, FaTools } from "react-icons/fa"; // Using react-icons for category tabs
+import { FaCodeBranch, FaLaptopCode, FaDatabase, FaTools, FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Added FaChevronLeft/Right for navigation
 
 // Utility to pick an icon based on category title (optional, but good for design)
 const getCategoryIcon = (title) => {
@@ -40,6 +40,21 @@ const Skills = () => {
     (cat) => cat.title === activeCategory
   ).skills;
 
+  // Ref for the horizontal tabs container
+  const tabsRef = useRef(null);
+  
+  // Function to scroll the tabs left or right
+  const scrollTabs = (direction) => {
+    if (tabsRef.current) {
+      const scrollAmount = 200; // Define scroll distance in pixels
+      if (direction === 'left') {
+        tabsRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        tabsRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <section
       id="skills"
@@ -67,28 +82,55 @@ const Skills = () => {
 
       {/* Main Skills Container with Tabs */}
       <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
-        {/* Category Tabs (Navigation) */}
-        <div className="lg:w-1/4 flex lg:flex-col overflow-x-auto lg:overflow-visible pb-4 lg:pb-0">
-          {SkillsInfo.map((category) => (
-            <button
-              key={category.title}
-              onClick={() => setActiveCategory(category.title)}
-              className={`
-                flex items-center justify-center lg:justify-start flex-shrink-0
-                py-3 px-4 rounded-xl text-lg font-semibold
-                whitespace-nowrap transition-all duration-300
-                ${
-                  activeCategory === category.title
-                    ? "text-white bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5] shadow-[0_0_15px_rgba(255,79,139,0.5)] border-2 border-transparent"
-                    : "text-gray-300 bg-gray-900/50 border-2 border-[#4f46e5]/30 hover:text-[#ff4f8b] hover:border-[#ff4f8b]/50"
-                }
-                lg:mb-3 mr-3 lg:mr-0
-              `}
-            >
-              {getCategoryIcon(category.title)}
-              {category.title}
-            </button>
-          ))}
+        
+        {/* Category Tabs (Navigation) - Wrapped in relative container for arrows */}
+        <div className="lg:w-1/4 flex-shrink-0 relative">
+          
+          {/* Scroll Left Button (Mobile only) */}
+          <button
+            onClick={() => scrollTabs('left')}
+            className="absolute left-0 top-0 bottom-4 flex items-center p-2 z-10 bg-gray-900/80 rounded-l-xl lg:hidden transition-opacity shadow-2xl border-r border-[#ff4f8b]/30"
+            aria-label="Scroll categories left"
+          >
+            <FaChevronLeft className="text-[#ff4f8b] w-4 h-4" />
+          </button>
+
+          {/* Category Tabs Content (The scrollable area) */}
+          {/* We use 'overflow-x-hidden' to hide the scrollbar and use 'px-10' to give space for the arrows */}
+          <div
+            ref={tabsRef}
+            className="flex lg:flex-col overflow-x-hidden lg:overflow-visible pb-4 lg:pb-0 px-10 lg:px-0 scrollbar-hide"
+          >
+            {SkillsInfo.map((category) => (
+              <button
+                key={category.title}
+                onClick={() => setActiveCategory(category.title)}
+                className={`
+                  flex items-center justify-center lg:justify-start flex-shrink-0
+                  py-3 px-4 rounded-xl text-lg font-semibold
+                  whitespace-nowrap transition-all duration-300
+                  ${
+                    activeCategory === category.title
+                      ? "text-white bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5] shadow-[0_0_15px_rgba(255,79,139,0.5)] border-2 border-transparent"
+                      : "text-gray-300 bg-gray-900/50 border-2 border-[#4f46e5]/30 hover:text-[#ff4f8b] hover:border-[#ff4f8b]/50"
+                  }
+                  lg:mb-3 mr-3 lg:mr-0
+                `}
+              >
+                {getCategoryIcon(category.title)}
+                {category.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Scroll Right Button (Mobile only) */}
+          <button
+            onClick={() => scrollTabs('right')}
+            className="absolute right-0 top-0 bottom-4 flex items-center p-2 z-10 bg-gray-900/80 rounded-r-xl lg:hidden transition-opacity shadow-2xl border-l border-[#ff4f8b]/30"
+            aria-label="Scroll categories right"
+          >
+            <FaChevronRight className="text-[#ff4f8b] w-4 h-4" />
+          </button>
         </div>
 
         {/* Skill Items (Content Area) */}

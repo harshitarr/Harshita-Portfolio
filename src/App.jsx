@@ -6,25 +6,35 @@ import Experience from "./components/Experience/Experience";
 import Work from "./components/Work/Work";
 import Education from "./components/Education/Education";
 import Contact from "./components/Contact/Contact";
+// NEW: Import the Particle Background
+import ParticleBackground from "./components/ParticleBackground";
 
 
 const App = () => {
   return (
-    <div className="bg-[#050414]">
-
-
+    // Set the overall container background to the deep dark color
+    <div className="relative min-h-screen bg-[#050414] font-sans">
       
-      <div className="relative pt-20">
+      {/* Background Layer (Fixed, Z-0) */}
+      <ParticleBackground />
+
+      {/* Content Layer (Relative, Z-10) */}
+      <div className="relative z-10">
+        
+        {/* Navbar is fixed and needs no change */}
         <Navbar />
-        <About />
-        <Skills />
-        <Experience />
-        <Work />
-        <Education />
-        <Contact />
+
+        {/* Main Sections */}
+        <main>
+          <About />
+          <Skills />
+          <Experience />
+          <Work />
+          <Education />
+          <Contact />
+        </main>
         
       </div>
-
     </div>
   );
 };
