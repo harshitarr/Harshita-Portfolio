@@ -64,7 +64,7 @@ const About = () => {
 
           {/* About Me Paragraph */}
           <p className="text-base sm:text-lg text-gray-400 mb-10 max-w-lg leading-relaxed">
-            I'm an aspiring Web Developer with a passion for creating **interactive and user-friendly web experiences**. I enjoy bringing digital designs to life through **intuitive interfaces** and seamless functionality, focusing on the MERN stack.
+            I'm an aspiring Web Developer with a passion for creating interactive and user-friendly web experiences. I enjoy bringing digital designs to life through intuitive interfaces and seamless functionality, focusing on the MERN stack.
           </p>
 
           {/* Action Buttons */}
