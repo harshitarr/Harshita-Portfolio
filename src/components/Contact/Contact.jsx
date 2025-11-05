@@ -71,9 +71,13 @@ const Contact = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold">CONTACT ME</h2>
+        <h2 className="text-4xl font-extrabold text-white">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5]">
+            CONTACT ME
+          </span>
+        </h2>
         <motion.div
-          className="w-24 h-1 bg-pink-500 mx-auto mt-3 rounded-full shadow-[0_0_12px_#ff4f8b]"
+          className="w-24 h-1 bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5] mx-auto mt-3 rounded-full shadow-[0_0_12px_#ff4f8b]"
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}

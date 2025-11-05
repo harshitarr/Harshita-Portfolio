@@ -17,98 +17,121 @@ const Experience = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <h2 className="text-4xl font-bold text-white">EXPERIENCE</h2>
-        <div className="w-32 h-1 bg-[#ff4f8b] mx-auto mt-4 rounded-full shadow-[0_0_12px_#ff4f8b]"></div>
+        <h2 className="text-4xl font-extrabold text-white">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5]">
+            EXPERIENCE
+          </span>
+        </h2>
+        <div className="w-32 h-1 bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5] mx-auto mt-4 rounded-full shadow-[0_0_12px_#ff4f8b]" />
         <p className="text-gray-400 mt-4 text-lg font-semibold">
           A collection of my work experience and the roles I have taken in
           various organizations.
         </p>
       </motion.div>
 
-      {/* Timeline Container */}
-      <div className="relative pl-20 lg:pl-0">
-        {/* Vertical Line */}
+      {/* Timeline Wrapper */}
+      <div className="relative">
+        {/* 🌈 Center Gradient Timeline Line (for all screens) */}
         <motion.div
-          className="absolute left-6 lg:left-1/2 transform lg:-translate-x-1/2 w-1 bg-[#ff4f8b] origin-top shadow-[0_0_12px_#ff4f8b]"
+          className="absolute left-1/2 top-0 w-[4px] h-full -translate-x-1/2 rounded-full bg-gradient-to-b from-[#ff4f8b] via-[#4f46e5] to-[#06b6d4] shadow-[0_0_12px_#ff4f8b]"
           initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          style={{ height: "100%" }}
-        ></motion.div>
+          whileInView={{ scaleY: 1 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          viewport={{ once: true }}
+        />
 
-        {experiences.map((experience, index) => (
-          <motion.div
-            key={experience.id}
-            className={`mb-20 flex flex-col lg:flex-row items-start lg:items-center ${
-              index % 2 === 0 ? "lg:justify-start" : "lg:justify-end"
-            }`}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.6,
-              ease: "easeOut",
-              delay: index * 0.15,
-            }}
-            viewport={{ once: true }}
-          >
-            {/* Timeline Circle */}
-            <div className="absolute left-3 lg:left-1/2 transform lg:-translate-x-1/2 w-10 h-10 lg:w-16 lg:h-16 bg-gray-900 border-4 border-[#ff4f8b] rounded-full flex justify-center items-center z-10 shadow-[0_0_20px_#ff4f8b]">
-              <img
-                src={experience.img}
-                alt={experience.company}
-                className="w-full h-full object-cover rounded-full"
-              />
-            </div>
-
-            {/* Card */}
+        <div className="space-y-16 relative z-10">
+          {experiences.map((experience, index) => (
             <motion.div
-              className={`w-full lg:w-[45%] p-6 lg:p-8 rounded-2xl bg-gray-900 border border-[#ff4f8b] shadow-[0_0_20px_1px_rgba(255,79,139,0.4)] backdrop-blur-md transition duration-300 hover:shadow-[0_0_25px_2px_rgba(255,79,139,0.6)] ${
-                index % 2 === 0
-                  ? "lg:ml-[55%] lg:mr-0 text-left"
-                  : "lg:mr-[55%] lg:ml-0 text-left"
-              }`}
-              whileHover={{ scale: 1.05 }}
+              key={experience.id || index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              className={`
+                flex items-center
+                ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}
+                flex-col md:space-y-0 space-y-6
+              `}
             >
-              {/* Card Header */}
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-20 h-14 bg-white rounded overflow-hidden">
-                  <img
-                    src={experience.img}
-                    alt={experience.company}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">
-                    {experience.role}
-                  </h3>
-                  <h4 className="text-sm text-gray-300">
-                    {experience.company}
-                  </h4>
-                  <p className="text-sm text-gray-500">{experience.date}</p>
-                </div>
-              </div>
+              {/* Empty spacer (for desktop only) */}
+              <div className="hidden md:block w-1/2" />
 
-              {/* Description */}
-              <p className="text-gray-400 mb-4">{experience.desc}</p>
+              {/* 🌈 Timeline Node (centered on all screens) */}
+              <motion.div
+                className="w-5 h-5 rounded-full border-4 border-gray-900 z-10 bg-gradient-to-r from-[#ff4f8b] via-[#4f46e5] to-[#06b6d4] shadow-[0_0_25px_rgba(255,79,139,0.8)] mx-auto"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
 
-              {/* Skills */}
-              <div>
-                <h5 className="font-medium text-white">Skills:</h5>
-                <ul className="flex flex-wrap mt-2">
-                  {experience.skills.map((skill, i) => (
-                    <li
-                      key={i}
-                      className="bg-transparent border-2 border-[#ff4f8b] text-white px-4 py-1 text-xs sm:text-sm rounded-3xl mr-2 mb-2 hover:border-pink-400 transition duration-300"
-                    >
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
+              {/* Card */}
+              <div
+                className={`
+                  w-full md:w-1/2 
+                  ${index % 2 === 0 ? "md:pl-8 text-left" : "md:pr-8 text-right"} 
+                  text-center md:text-left
+                `}
+              >
+                <div className="p-5 md:p-7 rounded-2xl bg-gray-900 border-2 border-[#ff4f8b]/30 shadow-[0_0_20px_rgba(255,79,139,0.4)] backdrop-blur-md transition-all duration-300 hover:border-[#ff4f8b]/60 hover:shadow-[0_0_30px_rgba(255,79,139,0.6)] hover:bg-gray-900/90">
+                  
+                  {/* Date */}
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                    <span className="text-[#ff4f8b] font-semibold text-xs md:text-sm bg-[#ff4f8b]/20 px-3 py-1 rounded-full border border-[#ff4f8b]/40">
+                      {experience.date}
+                    </span>
+                  </div>
+
+                  {/* Header */}
+                  <div className="flex items-center justify-center md:justify-start gap-4 mb-5">
+                    <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl overflow-hidden shadow-lg ring-2 ring-[#ff4f8b]/50 flex-shrink-0">
+                      <img
+                        src={experience.img}
+                        alt={experience.company}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-left flex-1 min-w-0">
+                      <h3 className="text-base md:text-lg font-bold text-white mb-1 truncate">
+                        {experience.role}
+                      </h3>
+                      <h4 className="text-[#ff4f8b] font-semibold text-xs md:text-sm truncate">
+                        {experience.company}
+                      </h4>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-gray-300 mb-5 leading-relaxed text-sm md:text-base">
+                    {experience.desc}
+                  </p>
+
+                  {/* Skills */}
+                  <div>
+                    <h5 className="font-semibold text-white mb-2 text-sm md:text-base">
+                      Skills & Technologies:
+                    </h5>
+                    <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                      {experience.skills.map((skill, i) => (
+                        <motion.span
+                          key={i}
+                          className="bg-gradient-to-r from-[#ff4f8b]/20 to-[#4f46e5]/20 border border-[#ff4f8b]/50 text-white px-2 md:px-3 py-1 text-xs md:text-sm rounded-full hover:border-[#ff4f8b] hover:bg-[#ff4f8b]/30 transition-all duration-300"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {skill}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

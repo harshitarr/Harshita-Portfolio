@@ -1,32 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState("about"); // Default to 'about'
   const [isScrolled, setIsScrolled] = useState(false);
-
-  // Detect scroll and change navbar background
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Smooth scroll function
-  const handleMenuItemClick = (sectionId) => {
-    setActiveSection(sectionId);
-    setIsOpen(false);
-
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   const menuItems = [
     { id: "about", label: "About" },
@@ -37,77 +17,155 @@ const Navbar = () => {
     { id: "contact", label: "Contact" },
   ];
 
+  // 1. Detect scroll and change navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      // Use a smoother threshold
+      setIsScrolled(window.scrollY > 80); 
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // 2. Active Section Detection (Intersection Observer or scroll spy)
+  // Using Intersection Observer for more accurate active section highlighting
+  const updateActiveSection = useCallback(() => {
+    let currentActive = "";
+    const scrollPosition = window.scrollY + window.innerHeight / 3; // Offset for better detection
+
+    menuItems.forEach(item => {
+      const section = document.getElementById(item.id);
+      if (section && section.offsetTop <= scrollPosition) {
+        // Find the last section that the top of the viewport has passed
+        currentActive = item.id;
+      }
+    });
+
+    if (currentActive) {
+      setActiveSection(currentActive);
+    }
+  }, [menuItems]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", updateActiveSection);
+    // Initial check on mount
+    updateActiveSection();
+    return () => window.removeEventListener("scroll", updateActiveSection);
+  }, [updateActiveSection]);
+
+
+  // 3. Smooth scroll function
+  const handleMenuItemClick = (sectionId) => {
+    // setActiveSection(sectionId); // Let scroll spy handle active state
+    setIsOpen(false);
+
+    const section = document.getElementById(sectionId);
+    if (section) {
+      // Use a defined offset if necessary, otherwise scrollIntoView is fine
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const navClasses = `fixed top-0 w-full z-50 transition-all duration-300 ease-in-out 
+    px-[7vw] md:px-[7vw] lg:px-[20vw] border-b ${
+      isScrolled
+        ? "bg-[#050414] bg-opacity-95 backdrop-blur-sm shadow-xl border-b-[#ff5f8f]/30"
+        : "bg-transparent border-b-transparent"
+    }`;
+
+  // Logo animation variants
+  const logoVariants = {
+    hover: { 
+      scale: 1.05, 
+      transition: { type: "spring", stiffness: 300 } 
+    }
+  };
+
   return (
     <motion.nav
-      initial={{ y: -60, opacity: 0 }}
+      initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 w-full z-50 transition duration-300 px-[7vw] md:px-[7vw] lg:px-[20vw] ${
-        isScrolled
-          ? "bg-[#050414] bg-opacity-50 backdrop-blur-md shadow-md"
-          : "bg-transparent"
-      }`}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+      className={navClasses}
     >
-      <div className="text-white py-5 flex justify-between items-center">
+      <div className="text-white py-4 flex justify-between items-center h-16">
         {/* Logo */}
-        <div className="text-lg font-semibold cursor-pointer">
+        <motion.div 
+          className="text-xl font-bold cursor-pointer font-mono"
+          variants={logoVariants}
+          whileHover="hover"
+          onClick={() => handleMenuItemClick("about")} // Scroll to top/about on logo click
+        >
           <span className="text-[#ff5f8f]">&lt;</span>
           <span className="text-white">Harshita.R.R</span>
-          <span className="text-[#ff5f8f]">&gt;</span>
-        </div>
+          <span className="text-[#ff5f8f]">/&gt;</span>
+        </motion.div>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-8 text-gray-300">
-          {menuItems.map((item) => (
-            <li
+        <ul className="hidden md:flex space-x-10 text-gray-300">
+          {menuItems.map((item, index) => (
+            <motion.li
               key={item.id}
-              className={`cursor-pointer hover:text-[#ff5f8f] ${
-                activeSection === item.id ? "text-[#ff5f8f]" : ""
-              }`}
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="relative cursor-pointer group"
             >
               <button
-                className="cursor-pointer"
+                className={`text-sm tracking-wider uppercase font-medium transition-colors duration-200 
+                  ${
+                    activeSection === item.id 
+                      ? "text-[#ff5f8f]" 
+                      : "hover:text-[#ff5f8f] text-gray-300"
+                  }`}
                 onClick={() => handleMenuItemClick(item.id)}
+                aria-current={activeSection === item.id ? "page" : undefined}
               >
                 {item.label}
               </button>
-            </li>
+              {/* Underline/Active Indicator */}
+              {activeSection === item.id && (
+                <motion.div
+                  layoutId="active-nav-item"
+                  className="absolute bottom-[-5px] left-0 right-0 h-[2px] bg-[#ff5f8f] rounded-full"
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
+            </motion.li>
           ))}
         </ul>
 
-        {/* Social Icons */}
-        <div className="hidden md:flex space-x-4">
+        {/* Social Icons (Desktop) */}
+        <div className="hidden md:flex space-x-5 items-center">
           <a
             href="https://github.com/harshitarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-300 hover:text-[#ff5f8f]"
+            aria-label="GitHub Profile"
+            className="text-gray-300 hover:text-[#ff5f8f] transition-colors duration-200 transform hover:scale-110"
           >
-            <FaGithub size={24} />
+            <FaGithub size={22} />
           </a>
           <a
             href="https://www.linkedin.com/in/harshita-ravindran-revathi-49aaa62b4"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-300 hover:text-[#ff5f8f]"
+            aria-label="LinkedIn Profile"
+            className="text-gray-300 hover:text-[#ff5f8f] transition-colors duration-200 transform hover:scale-110"
           >
-            <FaLinkedin size={24} />
+            <FaLinkedin size={22} />
           </a>
         </div>
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden">
-          {isOpen ? (
-            <FiX
-              className="text-3xl text-[#ff5f8f] cursor-pointer"
-              onClick={() => setIsOpen(false)}
-            />
-          ) : (
-            <FiMenu
-              className="text-3xl text-[#ff5f8f] cursor-pointer"
-              onClick={() => setIsOpen(true)}
-            />
-          )}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-[#ff5f8f] hover:text-white transition-colors duration-200 focus:outline-none"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? <FiX size={30} /> : <FiMenu size={30} />}
+          </button>
         </div>
       </div>
 
@@ -115,41 +173,51 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-16 left-0 w-full bg-[#050414] bg-opacity-70 backdrop-blur-lg z-50 md:hidden flex justify-center"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="absolute left-0 w-full bg-[#050414] bg-opacity-95 backdrop-blur-lg z-40 md:hidden overflow-hidden shadow-lg border-t border-t-[#ff5f8f]/30"
           >
-            <ul className="flex flex-col items-center space-y-6 py-6 text-gray-300">
+            <ul className="flex flex-col items-center space-y-4 py-6 text-gray-300">
               {menuItems.map((item) => (
-                <li
+                <motion.li
                   key={item.id}
-                  className={`cursor-pointer hover:text-[#ff5f8f] ${
-                    activeSection === item.id ? "text-[#ff5f8f]" : ""
-                  }`}
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.1 + menuItems.indexOf(item) * 0.05 }}
+                  className="w-full text-center"
                 >
-                  <button onClick={() => handleMenuItemClick(item.id)}>
+                  <button
+                    className={`text-lg font-medium py-2 block w-full transition-colors duration-200 ${
+                      activeSection === item.id 
+                        ? "text-[#ff5f8f] bg-[#ff5f8f]/10" 
+                        : "hover:text-[#ff5f8f] hover:bg-[#ff5f8f]/5"
+                    }`}
+                    onClick={() => handleMenuItemClick(item.id)}
+                  >
                     {item.label}
                   </button>
-                </li>
+                </motion.li>
               ))}
-              <div className="flex space-x-6">
+              <div className="flex space-x-6 pt-4 border-t border-gray-700 w-3/4 justify-center mt-4">
                 <a
                   href="https://github.com/harshitarr"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-[#ff5f8f]"
+                  aria-label="GitHub Profile"
+                  className="text-gray-300 hover:text-[#ff5f8f] transition-colors duration-200"
                 >
-                  <FaGithub size={28} />
+                  <FaGithub size={24} />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/harshita-ravindran-revathi-49aaa62b4"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-[#ff5f8f]"
+                  aria-label="LinkedIn Profile"
+                  className="text-gray-300 hover:text-[#ff5f8f] transition-colors duration-200"
                 >
-                  <FaLinkedin size={28} />
+                  <FaLinkedin size={24} />
                 </a>
               </div>
             </ul>

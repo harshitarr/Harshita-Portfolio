@@ -120,8 +120,8 @@ export const education = [
     school: "Amrita Vishwa Vidyapeetham",
     date: "Aug 2023 - July 2027",
     grade: "7.69 CGPA",
-    desc: "I am currently pursuing my B.Tech in Computer and Communication Engineering at Amrita College and expect to graduate in 2027. Through this course, I am building strong technical skills in computing, programming, and modern communication technologies. I am especially interested in full stack web development, which allows me to combine my coding skills with creative problem-solving to build user-friendly applications and projects",
-    degree: "B.Tech Computer And Communication Engineering",
+    desc: "I am currently pursuing my B.Tech in Computer and Communication Engineering at Amrita College and expect to graduate in 2027. Through this course, I am building strong technical skills in computing, programming, and modern communication technologies.",
+    degree: " Computer & Communication Engineering",
   },
   {
     id: 1,
@@ -129,7 +129,7 @@ export const education = [
     school: "The PSBB Millennium School",
     date: "June 2022 - March 2023",
     grade: "88.4%",
-    desc: "I pursued my higher secondary education in the Bio-Maths group under the CBSE curriculum, building a strong foundation in both life sciences and mathematics. I developed analytical and problem-solving skills through subjects like Biology, Mathematics, Physics, and Chemistry. This combination has prepared me for interdisciplinary learning and practical applications in my further studies and projects",
+    desc: "I pursued my higher secondary education in the Bio-Maths group under the CBSE curriculum, building a strong foundation in both life sciences and mathematics.",
     degree: "CBSE Class XII (PCMB)",
   },
   {
@@ -138,7 +138,7 @@ export const education = [
     school: "The PSBB Millennium School",
     date: "June 2020 - June 2021",
     grade: "97%",
-    desc: "I completed my Class 10 under the CBSE curriculum with a strong focus on core subjects.This helped me build a solid academic foundation and sharpen my analytical and logical thinking skills.These early years shaped my interest in science and problem-solving, preparing me for higher studies",
+    desc: "I completed my Class 10 under the CBSE curriculum with a strong focus on core subjects.This helped me build a solid academic foundation and sharpen my analytical and logical thinking skills.",
     degree: "CBSE Class X",
   },
 ];
