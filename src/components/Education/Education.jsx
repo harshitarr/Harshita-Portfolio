@@ -31,7 +31,7 @@ const Education = () => {
       >
         <h2 className="text-4xl font-extrabold text-white">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5]">
-            ACADEMIC JOURNEY
+            EDUCATION
           </span>
         </h2>
         <div className="w-32 h-1 bg-gradient-to-r from-[#ff4f8b] to-[#4f46e5] mx-auto mt-4 rounded-full shadow-[0_0_12px_#ff4f8b]" />
