@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,6 +7,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("about");
   const [isScrolled, setIsScrolled] = useState(false);
+  const scrollPositionRef = useRef(0); // Store scroll position when menu opens
 
   const menuItems = [
     { id: "about", label: "About" },
@@ -31,23 +32,25 @@ const Navbar = () => {
   useEffect(() => {
     if (isOpen) {
       // Store current scroll position
-      const scrollY = window.scrollY;
+      scrollPositionRef.current = window.scrollY;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
+      document.body.style.top = `-${scrollPositionRef.current}px`;
       document.body.style.left = '0';
       document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
+      // Restore scroll position only if menu is being closed
+      const scrollY = scrollPositionRef.current;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
       document.body.style.overflow = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
+      document.body.style.width = '';
+      
+      // Restore to the stored position
+      window.scrollTo(0, scrollY);
     }
 
     return () => {
@@ -56,13 +59,17 @@ const Navbar = () => {
       document.body.style.left = '';
       document.body.style.right = '';
       document.body.style.overflow = '';
+      document.body.style.width = '';
     };
   }, [isOpen]);
 
   // 3. Active Section Detection with improved logic
   const updateActiveSection = useCallback(() => {
+    // Don't update active section when mobile menu is open
+    if (isOpen) return;
+    
     const scrollPosition = window.scrollY + 100;
-    let currentActive = "";
+    let currentActive = "about"; // Default to first section
 
     // Check each section from bottom to top
     for (let i = menuItems.length - 1; i >= 0; i--) {
@@ -73,10 +80,10 @@ const Navbar = () => {
       }
     }
 
-    if (currentActive && currentActive !== activeSection) {
+    if (currentActive !== activeSection) {
       setActiveSection(currentActive);
     }
-  }, [menuItems, activeSection]);
+  }, [activeSection, isOpen]); // Added isOpen as dependency
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,6 +98,9 @@ const Navbar = () => {
 
   // 4. Enhanced smooth scroll function with better mobile support
   const handleMenuItemClick = (sectionId) => {
+    // Update active section immediately when clicked
+    setActiveSection(sectionId);
+    
     // Close mobile menu immediately
     setIsOpen(false);
     
@@ -100,6 +110,9 @@ const Navbar = () => {
       if (section) {
         const navbarHeight = 80; // Fixed navbar height
         const targetPosition = section.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+        
+        // Update the scroll position ref to prevent jumping
+        scrollPositionRef.current = targetPosition;
         
         // Try modern smooth scrolling first
         if ('scrollBehavior' in document.documentElement.style) {
@@ -128,8 +141,13 @@ const Navbar = () => {
 
           window.requestAnimationFrame(step);
         }
+        
+        // Force update active section after scroll completes
+        setTimeout(() => {
+          updateActiveSection();
+        }, 900); // Slightly longer than scroll duration
       }
-    }, isOpen ? 100 : 0); // Only delay if menu was open
+    }, 100);
   };
 
   // Easing function for smooth animation
@@ -248,13 +266,13 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="absolute left-0 top-16 w-full bg-[#050414] bg-opacity-98 backdrop-blur-lg z-40 md:hidden overflow-hidden shadow-2xl  border-t border-t-[#ff5f8f]/30"
+            className="absolute left-0 top-16 w-full bg-[#050414] bg-opacity-98 backdrop-blur-lg z-40 md:hidden overflow-hidden shadow-2xl border-t border-t-[#ff5f8f]/30"
             style={{
               maxHeight: 'calc(100vh - 4rem)',
               WebkitOverflowScrolling: 'touch'
             }}
           >
-            <ul className="flex flex-col space-y-0 py-4  text-gray-300">
+            <ul className="flex flex-col space-y-0 py-4 text-gray-300">
               {menuItems.map((item, index) => (
                 <motion.li
                   key={item.id}
