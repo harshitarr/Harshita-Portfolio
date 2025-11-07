@@ -1,72 +1,73 @@
 // src/components/Work/Work.jsx
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Slider from "react-slick";
-import { projects } from "../../constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
-// 🔥 Custom Arrows with Enhanced Glow
-const Arrow = ({ onClick, direction }) => (
-  <motion.button
-    onClick={onClick}
-    className={`absolute top-1/2 -translate-y-1/2 z-10 p-3 sm:p-4 rounded-full border-2 border-[#ff4f8b]/70 
-      backdrop-blur-md transition-all duration-300 
-      shadow-[0_0_35px_rgba(255,79,139,0.8)] 
-      ${direction === "left" ? "-left-6 sm:-left-10" : "-right-6 sm:-right-10"} 
-      bg-gray-900/90 text-[#ff4f8b]
-      hover:border-[#ff4f8b] hover:shadow-[0_0_45px_rgba(255,79,139,1.0)]`}
-    whileHover={{
-      scale: 1.15,
-      boxShadow: "0 0 40px rgba(255,79,139,1.0)",
-    }}
-    whileTap={{ scale: 0.9 }}
-  >
-    {direction === "left" ? <ChevronLeft size={22} /> : <ChevronRight size={22} />}
-  </motion.button>
-);
+import { projects } from "../../constants";
 
 const Work = () => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemWidth, setItemWidth] = useState(0);
+  const containerRef = useRef(null);
+  const itemRef = useRef(null);
 
   const handleOpenModal = (project) => setSelectedProject(project);
   const handleCloseModal = () => setSelectedProject(null);
 
-  const settings = {
-    infinite: true,
-    speed: 700,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2500,
-    pauseOnHover: true,
-    arrows: true,
-    nextArrow: <Arrow direction="right" />,
-    prevArrow: <Arrow direction="left" />,
-    dots: true,
-    appendDots: (dots) => (
-      <div style={{ bottom: "-40px" }}>
-        <ul className="flex justify-center mt-6 gap-2">{dots}</ul>
-      </div>
-    ),
-    customPaging: () => (
-      <motion.div
-        whileHover={{ scale: 1.2 }}
-        className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#ff4f8b]/60 hover:bg-[#ff4f8b] transition-all duration-300 shadow-[0_0_15px_rgba(255,79,139,0.8)]"
-      />
-    ),
-    responsive: [
-      { breakpoint: 1280, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 1 } },
-    ],
+  // Calculate items per view based on screen size
+  const getItemsPerView = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) return 3; // lg: 3 columns
+      if (window.innerWidth >= 768) return 2;  // md: 2 columns
+      return 1; // sm: 1 column
+    }
+    return 3;
+  };
+
+  const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
+
+  // Calculate actual item width including gap
+  useEffect(() => {
+    const calculateItemWidth = () => {
+      if (itemRef.current) {
+        const rect = itemRef.current.getBoundingClientRect();
+        const gap = 32; // 32px gap
+        setItemWidth(rect.width + gap);
+      }
+    };
+
+    calculateItemWidth();
+    window.addEventListener('resize', calculateItemWidth);
+    return () => window.removeEventListener('resize', calculateItemWidth);
+  }, [itemsPerView]);
+
+  // Update items per view on resize
+  useEffect(() => {
+    const handleResize = () => {
+      const newItemsPerView = getItemsPerView();
+      setItemsPerView(newItemsPerView);
+      setCurrentIndex(0); // Reset to first slide on resize
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Calculate max index
+  const maxIndex = Math.max(0, projects.length - itemsPerView);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
   return (
     <section
       id="work"
-      // MODIFICATION: Changed to a deep dark gradient background
-      className="py-20 sm:py-24 px-[5vw] md:px-[7vw] lg:px-[10vw] font-sans "
+      className="py-20 sm:py-24 px-[5vw] md:px-[7vw] lg:px-[10vw] font-sans"
     >
       {/* 🌈 Section Title */}
       <motion.div
@@ -87,80 +88,139 @@ const Work = () => {
         </p>
       </motion.div>
 
-      {/* 🌀 Carousel */}
-      <Slider {...settings}>
-        {projects.map((project, index) => (
+      {/* 💥 Carousel Container */}
+      <div className="relative">
+        {/* Left Arrow */}
+        <button
+          onClick={handlePrevious}
+          disabled={currentIndex === 0}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-transparent hover:bg-[#ff4f8b]/20 border-2 border-[#ff4f8b] text-[#ff4f8b] p-3 rounded-full transition-all duration-300 -translate-x-1/2 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Previous projects"
+        >
+          <ChevronLeft size={24} strokeWidth={3} />
+        </button>
+
+        {/* Right Arrow */}
+        <button
+          onClick={handleNext}
+          disabled={currentIndex >= maxIndex}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-transparent hover:bg-[#ff4f8b]/20 border-2 border-[#ff4f8b] text-[#ff4f8b] p-3 rounded-full transition-all duration-300 translate-x-1/2 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Next projects"
+        >
+          <ChevronRight size={24} strokeWidth={3} />
+        </button>
+
+        {/* Carousel Wrapper */}
+        <div ref={containerRef} className="overflow-hidden">
           <motion.div
-            key={project.id || index}
-            onClick={() => handleOpenModal(project)}
-            className="px-3 sm:px-5 cursor-pointer"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{
-              boxShadow: "0 0 50px rgba(255,79,139,0.9)", // Enhanced hover glow
+            className="flex gap-8"
+            animate={{
+              x: itemWidth ? -currentIndex * itemWidth : 0,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+            }}
+            drag="x"
+            dragConstraints={containerRef}
+            dragElastic={0.1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = offset.x * velocity.x;
+              if (swipe < -10000) {
+                handleNext();
+              } else if (swipe > 10000) {
+                handlePrevious();
+              }
             }}
           >
-            <div className="border-2 border-[#ff4f8b]/50 bg-gray-900/90 rounded-2xl 
-            shadow-[0_0_35px_rgba(255,79,139,0.5)] overflow-hidden h-[360px] sm:h-[380px] 
-            flex flex-col transition-all duration-300 hover:shadow-[0_0_50px_rgba(255,79,139,1.0)]"> {/* Enhanced static and hover glow */}
-              <div className="relative">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-40 sm:h-44 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#ff4f8b]/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3 sm:pb-4">
-                  <p className="text-white font-semibold text-xs sm:text-sm bg-[#ff4f8b]/80 px-3 py-1 rounded-full">
-                    View Details
-                  </p>
-                </div>
-              </div>
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id || index}
+                ref={index === 0 ? itemRef : null}
+                onClick={() => handleOpenModal(project)}
+                className="cursor-pointer flex-shrink-0"
+                style={{
+                  width: `calc((100% - ${(itemsPerView - 1) * 32}px) / ${itemsPerView})`,
+                }}
+                whileHover={{
+                  boxShadow: "0 0 0 2px #ff4f8b, 0 0 20px 2px rgba(255,79,139,0.8), 0 0 30px 4px rgba(255,79,139,0.6)",
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="border-2 border-[#ff4f8b]/50 bg-gray-900/90 rounded-2xl overflow-hidden h-full flex flex-col transition-all duration-300">
+                  <div className="relative">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-40 sm:h-44 object-cover pointer-events-none"
+                      draggable="false"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#ff4f8b]/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3 sm:pb-4">
+                      <p className="text-white font-semibold text-xs sm:text-sm bg-[#ff4f8b]/80 px-3 py-1 rounded-full">
+                        View Details
+                      </p>
+                    </div>
+                  </div>
 
-              <div className="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                  {project.title}
-                </h3>
-                {/* Description: line-clamp-3 already limits content and adds '...' */}
-                <p className="text-gray-400 mb-4 text-sm sm:text-base line-clamp-3 flex-grow">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.slice(0, 3).map((tag, i) => ( // 🛑 Limit to 3 tags
-                    <span
-                      key={i}
-                      className="px-2 py-0.5 sm:py-1 bg-gradient-to-r from-[#ff4f8b]/30 to-[#4f46e5]/30 border border-[#ff4f8b]/70 text-[10px] sm:text-xs text-white rounded-full shadow-[0_0_15px_rgba(255,79,139,0.6)]" // Enhanced tag glow
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {/* 🛑 Add +X indicator if there are more than 3 tags */}
-                  {project.tags.length > 3 && (
-                    <span
-                      className="px-2 py-0.5 sm:py-1 bg-gray-600/50 border border-gray-500/50 text-[10px] sm:text-xs text-white rounded-full"
-                    >
-                      +{project.tags.length - 3} more
-                    </span>
-                  )}
+                  <div className="p-4 sm:p-5 flex flex-col flex-grow">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-400 mb-4 text-sm sm:text-base line-clamp-3 flex-grow">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {project.tags.slice(0, 3).map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 sm:py-1 bg-gradient-to-r from-[#ff4f8b]/30 to-[#4f46e5]/30 border border-[#ff4f8b]/70 text-[10px] sm:text-xs text-white rounded-full shadow-[0_0_15px_rgba(255,79,139,0.6)]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {project.tags.length > 3 && (
+                        <span className="px-2 py-0.5 sm:py-1 bg-gray-600/50 border border-gray-500/50 text-[10px] sm:text-xs text-white rounded-full">
+                          +{project.tags.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </Slider>
+        </div>
+
+        {/* Carousel Dots Indicator */}
+        <div className="flex justify-center gap-2 mt-8">
+          {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentIndex === index
+                  ? "w-8 bg-[#ff4f8b] shadow-[0_0_15px_rgba(255,79,139,0.8)]"
+                  : "w-2 bg-gray-600 hover:bg-gray-500"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* 💫 Modal (Project Details) */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 sm:p-6" // Increased backdrop opacity
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 sm:p-6"
             onClick={handleCloseModal}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-gray-900 rounded-2xl shadow-[0_0_60px_rgba(255,79,139,0.8)] w-full max-w-lg sm:max-w-3xl relative overflow-hidden" // Significantly enhanced modal glow
+              className="bg-gray-900 rounded-2xl shadow-[0_0_60px_rgba(255,79,139,0.8)] w-full max-w-lg sm:max-w-3xl relative overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -178,22 +238,20 @@ const Work = () => {
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
-                  className="w-full h-[200px] sm:h-[300px] object-contain rounded-xl mb-6 shadow-[0_0_30px_rgba(255,79,139,0.6)]" // Enhanced image shadow
+                  className="w-full h-[200px] sm:h-[300px] object-contain rounded-xl mb-6 shadow-[0_0_30px_rgba(255,79,139,0.6)]"
                 />
                 <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
                   {selectedProject.title}
                 </h3>
-                {/* Description: Full description shown in modal */}
                 <p className="text-gray-300 mb-6 text-sm sm:text-base">
                   {selectedProject.description}
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {/* Tags: All tags shown in modal */}
                   {selectedProject.tags.map((tag, i) => (
                     <span
                       key={i}
-                      className="bg-gradient-to-r from-[#ff4f8b]/30 to-[#4f46e5]/30 border border-[#ff4f8b]/70 text-white text-xs px-3 py-1 rounded-full shadow-[0_0_15px_rgba(255,79,139,0.6)]" // Enhanced tag glow
+                      className="bg-gradient-to-r from-[#ff4f8b]/30 to-[#4f46e5]/30 border border-[#ff4f8b]/70 text-white text-xs px-3 py-1 rounded-full shadow-[0_0_15px_rgba(255,79,139,0.6)]"
                     >
                       {tag}
                     </span>
