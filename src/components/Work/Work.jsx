@@ -220,7 +220,7 @@ const Work = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-gray-900 rounded-2xl shadow-[0_0_60px_rgba(255,79,139,0.8)] w-full max-w-lg sm:max-w-3xl relative overflow-hidden"
+              className="bg-gray-900 rounded-2xl shadow-[0_0_60px_rgba(255,79,139,0.8)] w-full max-w-xl sm:max-w-4xl relative overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -234,7 +234,7 @@ const Work = () => {
                 &times;
               </button>
 
-              <div className="p-5 sm:p-8 overflow-y-auto max-h-[90vh]">
+              <div className="p-5 sm:p-8">
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
