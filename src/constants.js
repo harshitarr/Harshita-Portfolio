@@ -155,7 +155,7 @@ export const projects = [
     image:shopvibe,
     tags: ["Next.js", "React.js", "Redux Toolkit", "Tailwind CSS", "Node.js", "Stripe", "Grok API", "Inngest", "Clerk", "MongoDB", "Mongoose"],
     github: "https://github.com/harshitarr/ShopVibe-Multivendor-Website",
-    webapp: "https://shop-vibe-website.vercel.app/",
+    webapp: "https://shop-vibe-multivendor-website.vercel.app/",
   },
   {
     id: 2,
