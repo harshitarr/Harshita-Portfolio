@@ -77,7 +77,7 @@ const About = () => {
           >
             {/* Primary Button (CV) */}
             <motion.a
-              href="Harshita_Resume_12-06-2025.pdf"
+              href="Harshita_Resume_17-12-2025.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center text-white py-3 px-8 rounded-lg text-base font-bold
