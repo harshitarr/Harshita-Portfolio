@@ -161,7 +161,7 @@ const Education = () => {
 
                   {/* Grade */}
                   {edu.grade && (
-                    <p className="text-gray-400 font-semibold text-xs md:text-sm mb-4">
+                    <p className="text-[#ff4f8b] font-semibold text-xs md:text-sm mb-4">
                       Grade: {edu.grade}
                     </p>
                   )}

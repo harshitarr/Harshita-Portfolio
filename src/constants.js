@@ -63,13 +63,13 @@ export const SkillsInfo = [
       { name: 'Express JS', logo: expressjsLogo },
       { name: 'MySQL', logo: mysqlLogo },
       { name: 'MongoDB', logo: mongodbLogo },
-      { name: 'Firebase', logo: firebaseLogo },
+      // { name: 'Firebase', logo: firebaseLogo },
     ],
   },
   {
     title: 'Languages',
     skills: [
-      { name: 'C', logo: cLogo },
+      // { name: 'C', logo: cLogo },
       { name: 'Java', logo: javaLogo },
       { name: 'Python', logo: pythonLogo },
       { name: 'JavaScript', logo: javascriptLogo },
@@ -112,7 +112,7 @@ export const education = [
     img: AmritaLogo,
     school: "Amrita Vishwa Vidyapeetham",
     date: "Aug 2023 - July 2027",
-    grade: "7.69 CGPA",
+    grade: "7.84 CGPA",
     desc: "I am currently pursuing my B.Tech in Computer and Communication Engineering at Amrita College and expect to graduate in 2027. Through this course, I am building strong technical skills in computing, programming, and modern communication technologies.",
     degree: " Computer & Communication Engineering",
   },
@@ -165,7 +165,7 @@ export const projects = [
     image: flowai,
     tags: [ "Next.js", "React.js", "Convex", "Clerk", "Vapi AI", "Tailwind CSS" ],
     github: "https://github.com/harshitarr/FlowAI-Fitness-AI",
-    webapp: "https://flow-ai-fitness-ai.vercel.app/",
+    webapp: "https://github.com/harshitarr/FlowAI-Fitness-AI",
   },
 
 ];
