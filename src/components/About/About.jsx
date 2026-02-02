@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ReactTypingEffect from 'react-typing-effect';
-import profileImage from '../../assets/profile2.png';
+import profileImage from '../../assets/profile1.png';
 import { FaDownload, FaEnvelope } from 'react-icons/fa'; // Import icons
 
 const About = () => {
