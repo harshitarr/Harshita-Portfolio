@@ -1,4 +1,3 @@
-// src/components/Skills/Skills.jsx
 import React, { useState, useRef } from "react";
 import { SkillsInfo } from "../../constants";
 import { motion, AnimatePresence } from "framer-motion";
