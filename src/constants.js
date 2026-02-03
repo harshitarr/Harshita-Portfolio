@@ -61,8 +61,7 @@ export const SkillsInfo = [
     skills: [
       { name: 'Node JS', logo: nodejsLogo },
       { name: 'MySQL', logo: mysqlLogo },
-      { name: 'MongoDB', logo: mongodbLogo },
-      { name: 'Express JS', logo: expressjsLogo },],
+      { name: 'MongoDB', logo: mongodbLogo },],
   },
   {
     title: 'Languages',
